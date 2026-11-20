@@ -62,6 +62,19 @@ Recuperación y respuesta
 5.	Recupera los documentos relevantes.
 6.	Evalúa la información y decide si debe responder, aclarar o derivar.
 7.	El flujo envía la respuesta correspondiente y, cuando corresponde, una notificación al equipo.
+#Justificación de la elección del modelo LLM
+
+**Modelo utilizado: Google Gemini 3.5 Flash (API de Google AI).**
+
+Se eligió un modelo alojado en la nube en lugar de implementar un modelo local por los siguientes motivos:
+
+- **Facilidad de integración:** permite conectar el modelo directamente con n8n mediante una API, simplificando la implementación del agente.
+- **Infraestructura:** no requiere disponer de un servidor propio ni de hardware dedicado para ejecutar modelos de lenguaje.
+- **Escalabilidad:** permite consumir el servicio según las necesidades del emprendimiento, sin administrar localmente la infraestructura de inferencia.
+- **Tiempo de implementación:** facilitó concentrar el desarrollo en la integración del agente, la recuperación de información mediante RAG y la automatización de la atención al cliente.
+
+La principal limitación identificada durante las pruebas fue la cuota de solicitudes del nivel gratuito de Gemini. Se produjo un error HTTP 429 al superar el límite diario de generación de contenido. Esto demuestra la importancia de considerar las cuotas y condiciones del proveedor al planificar una implementación productiva.
+La elección resulta adecuada para un prototipo funcional de MAEL, aunque para producción será necesario evaluar los límites de uso, los costos y la disponibilidad del servicio.
 La tabla utilizada en Supabase es documents, con contenido, metadatos y embeddings vectoriales de 3072 dimensiones.
 5. Justificación del modelo y del almacenamiento vectorial
 Se eligió Google Gemini Embeddings para transformar los documentos de MAEL en vectores que permiten recuperar información semánticamente relacionada con las consultas de los clientes.
