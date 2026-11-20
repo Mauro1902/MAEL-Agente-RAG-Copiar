@@ -1,0 +1,102 @@
+{
+  "name": "MAEL - Manejo de errores",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "58e8d408-cde0-46b9-bac8-3b69e7aae863",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "19b657eb-e5e4-4284-b875-1c68ffa694c8",
+              "name": "aviso_error",
+              "value": "={{   \"⚠️ ERROR EN WORKFLOW MAEL\\n\" +   \"Workflow: \" + ($json.workflow?.name || \"No identificado\") + \"\\n\" +   \"Ejecución: \" + ($json.execution?.id || \"No identificada\") + \"\\n\" +   \"Error: \" + ($json.execution?.error?.message || $json.error?.message || \"Revisar ejecución en n8n\") }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "b2519018-232c-4e6e-9723-712160beb51b",
+      "name": "Preparar aviso de error"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v25.0/1556202700910564/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"543516558058\",\n  \"type\": \"text\",\n  \"text\": {\n    \"preview_url\": false,\n    \"body\": \"{{ $json.aviso_equipo }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        384,
+        -16
+      ],
+      "id": "3409dd74-d304-4752-abec-a5f63abf395b",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "6yIxK2SKSZxbHscN",
+          "name": "Header Auth account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Preparar aviso de error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar aviso de error": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "a2de5e99-2631-4445-be68-6687adcd1dbf",
+  "meta": {
+    "instanceId": "d72641a3b4bb0a68dfec149c554734d27d1d1d1810cdf2853219bf11d3e9e544"
+  },
+  "nodeGroups": [],
+  "id": "EJTBrxN1yF7qwylx",
+  "tags": []
+}

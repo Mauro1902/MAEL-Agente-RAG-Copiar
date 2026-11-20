@@ -1,0 +1,157 @@
+{
+  "name": "MAEL - Indexación RAG",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        -80
+      ],
+      "id": "736f9abc-d77e-412d-afdc-e8a95dabbef9",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "61adc89c-ed42-4d0f-807f-65363dbde7ab",
+              "name": "documento",
+              "value": "NEGOCIO: MAEL  CATEGORIA: Productos  DESCRIPCION: MAEL es un emprendimiento de indumentaria personalizada que trabaja con remeras, prendas oversized, hoodies y accesorios.  PERSONALIZACION: El negocio utiliza estampado DTF para personalizar prendas mediante diseños, logos e imágenes.  CONSULTAS FRECUENTES: Los clientes pueden consultar por modelos, talles, colores, personalización y pedidos.  IMPORTANTE: Los precios, el stock, los tiempos de entrega y las condiciones de pago deben confirmarse con información comercial actualizada. El asistente no debe inventar estos datos.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        32,
+        -80
+      ],
+      "id": "b6ef4f9c-fc7b-4272-870a-1dfd5fe8d57b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.4,
+      "position": [
+        256,
+        -80
+      ],
+      "id": "26f5e137-fd9a-409f-9446-d3c4ef87ac09",
+      "name": "Supabase Vector Store1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "Z0toYBek1yOm3dHu",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.documento }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        384,
+        128
+      ],
+      "id": "97b7dcf9-6dc8-41fe-ac6f-211e1cb6fbd2",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        192,
+        112
+      ],
+      "id": "11ab9c58-13b2-4fe2-9153-89ba861127fc",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "I9NIGtKy5YeDxGf5",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "685c68e6-e6f1-490b-9e4c-d7952899328e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d72641a3b4bb0a68dfec149c554734d27d1d1d1810cdf2853219bf11d3e9e544"
+  },
+  "nodeGroups": [],
+  "id": "cbfTlnPD66eTl6Jj",
+  "tags": []
+}
